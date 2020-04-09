@@ -17,10 +17,16 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 
-@app.route('/')
 def main():
     db_session.global_init("db/blogs.sqlite")
     app.run(port=8081, host='127.0.0.1')
+
+
+@app.route('/')
+def index():
+    session = db_session.create_session()
+
+    return render_template("index.html")
 
 
 @app.route('/register', methods=['GET', 'POST'])
