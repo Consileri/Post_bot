@@ -1,7 +1,10 @@
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
-from commander.commander import Commander
+from commander import Commander
+from vk_api.longpoll import VkEventType
+
+from vk_bot import VkBot
 
 
 def main():
