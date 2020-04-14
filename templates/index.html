@@ -9,8 +9,10 @@
 
         <div class="text-center">
             {% if current_user.is_authenticated %}
-                <a class="btn btn-primary ml-2" href="">test</a>
-                <a class="btn btn-primary ml-2" href="">test</a>
+                {% if user.postman %}
+                    <a class="btn btn-primary ml-2" href="">Просмотреть состояние заказа</a>
+                {% else %}
+                    <a class="btn btn-primary ml-2" href="">Перейти к покупкам</a>
             {% else %}
                 <div class="alert alrt-dark">
                     <h5>Вы не вошли в систему.</h5>
