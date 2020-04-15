@@ -10,7 +10,6 @@ from forms.register import RegisterForm
 from forms.login import LoginForm
 from data.users import User
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
@@ -47,7 +46,7 @@ def reqister():
             name=form.name.data,
             email=form.email.data,
             about=form.about.data,
-            is_postman=form.selection.data=="value"
+            is_postman=form.selection.data == "value"
         )
         user.set_password(form.password.data)
         session.add(user)

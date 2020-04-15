@@ -11,8 +11,9 @@
             {% if current_user.is_authenticated %}
                 {% if current_user.is_postman %}
                     <a class="btn btn-primary ml-2" href="">Просмотреть состояние заказа</a>
-                {% else %}
+                {% elif not current_user.is_postman %}
                     <a class="btn btn-primary ml-2" href="">Перейти к покупкам</a>
+                {% endif %}
             {% else %}
                 <div class="alert alrt-dark">
                     <h5>Вы не вошли в систему.</h5>
