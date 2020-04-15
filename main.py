@@ -6,6 +6,8 @@ from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
 from data import db_session
+from data.oder import Order
+from forms.order import OrderForm
 from forms.register import RegisterForm
 from forms.login import LoginForm
 from data.users import User
@@ -76,6 +78,48 @@ def login():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route('/customer', methods=['GET', 'POST'])
+def postman():
+    form = OrderForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        order = Order()
+        order.title = form.title.data
+        current_user.order.append(order)
+        session.merge(current_user)
+        session.commit()
+        return redirect('/orders')
+    return render_template('order.html', title='Добавленные заказы',
+                           form=form)
+
+
+@app.route('/orders', methods=['GET', 'POST'])
+@login_required
+def orders():
+    session = db_session.create_session()
+
+    if current_user.is_authenticated:
+        orders = session.query(Order).filter(
+            (Order.user == current_user))
+    else:
+        orders = session.query(Order)
+    return render_template("your_orders.html", orders=orders)
+
+
+@app.route('/orders_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def orders_delete(id):
+    session = db_session.create_session()
+    orders = session.query(Order).filter(Order.id == id,
+                                         Order.user == current_user).first()
+    if orders:
+        session.delete(orders)
+        session.commit()
+    else:
+        abort(404)
+    return redirect('/orders')
 
 
 @login_manager.user_loader
