@@ -10,6 +10,7 @@ from forms.register import RegisterForm
 from forms.login import LoginForm
 from data.users import User
 
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
@@ -19,6 +20,7 @@ login_manager.init_app(app)
 
 def main():
     db_session.global_init("db/blogs.sqlite")
+    app.run()
 
 
 @app.route('/')
