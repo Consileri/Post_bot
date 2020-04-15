@@ -46,7 +46,8 @@ def reqister():
         user = User(
             name=form.name.data,
             email=form.email.data,
-            about=form.about.data
+            about=form.about.data,
+            is_postman=form.selection.data=="value"
         )
         user.set_password(form.password.data)
         session.add(user)
