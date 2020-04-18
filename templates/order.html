@@ -8,15 +8,107 @@
             {% if message %}
                 <p class="alert alert-danger" role="alert">{{message}}</p>
             {% endif %}
-            <p>
-                {{ form.title.label }}<br>
-                {{ form.title(class="form-control") }}<br>
-                {% for error in form.title.errors %}
-                    <p class="alert alert-danger" role="alert">
-                        {{ error }}
-                    </p>
-                {% endfor %}
-            </p>
+            <div class="container border border-primary rounded mb-3 bg-light">
+                <h5>Укажите свой адрес</h5>
+                <p>
+                    {{ form.country.label }}<br>
+                    {{ form.country(class="form-control") }}<br>
+                    {% for error in form.country.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    {{ form.town.label }}<br>
+                    {{ form.town(class="form-control") }}<br>
+                    {% for error in form.town.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    {{ form.street.label }}<br>
+                    {{ form.street(class="form-control") }}<br>
+                    {% for error in form.street.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    {{ form.house.label }}<br>
+                    {{ form.house(class="form-control") }}<br>
+                    {% for error in form.house.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    <div class="bd-example" align="middle">
+                        <img src="{{url_for('static', filename='pisma2.png')}}" align="middle" />
+                    </div>
+                </p>
+            </div>
+
+            <div class="container border border-success rounded mb-3 bg-light">
+                <h5>Дополнительные параметры</h5>
+                <p>
+                    {{ form.flat.label }}<br>
+                    {{ form.flat(class="form-control") }}<br>
+                </p>
+
+                <p>
+                    {{ form.body.label }}<br>
+                    {{ form.body(class="form-control") }}<br>
+                </p>
+
+                <p>
+                    {{ form.porch.label }}<br>
+                    {{ form.porch(class="form-control") }}<br>
+                </p>
+
+                <p>
+                    {{ form.floor.label }}<br>
+                    {{ form.floor(class="form-control") }}<br>
+                </p>
+            </div>
+
+            <div class="container border border-primary rounded mb-3 bg-light">
+                <h5>Контактная информация</h5>
+                <p>
+                    {{ form.your_name.label }}<br>
+                    {{ form.your_name(class="form-control") }}<br>
+                    {% for error in form.your_name.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    {{ form.phone.label }}<br>
+                    {{ form.phone(class="form-control") }}<br>
+                    {% for error in form.phone.errors %}
+                        <p class="alert alert-danger" role="alert">
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </p>
+
+                <p>
+                    <div class="bd-example" align="middle">
+                        <img src="{{url_for('static', filename='pisma3.png')}}" align="middle" />
+                    </div>
+                </p>
+            </div>
+
             <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
         </form>
 {% endblock %}

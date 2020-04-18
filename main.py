@@ -86,7 +86,16 @@ def postman():
     if form.validate_on_submit():
         session = db_session.create_session()
         order = Order()
-        order.title = form.title.data
+        order.country = form.country.data
+        order.town = form.town.data
+        order.street = form.street.data
+        order.house = form.house.data
+        order.flat = form.flat.data
+        order.body = form.body.data
+        order.porch = form.porch.data
+        order.floor = form.floor.data
+        order.your_name = form.your_name.data
+        order.phone = form.phone.data
         current_user.order.append(order)
         session.merge(current_user)
         session.commit()

@@ -2,7 +2,9 @@
 
 {% block content %}
     <h1 class="text-center">Добро пожаловать</h1>
-    <img src="{url_for('static', filename='img/1802.jpg')}" alt="не удалось открыть изображение" />
+    <div class="bd-example" align="middle">
+        <img src="{{url_for('static', filename='1802.jpg')}}" align="middle" />
+    </div>
         <div class="alert alert-success" role="alert">
             <h5 class="text-center">✓ Сервис для покупателей и почтальонов</h5>
         </div>
@@ -11,8 +13,10 @@
             {% if current_user.is_authenticated %}
                 {% if current_user.is_postman %}
                     <a class="btn btn-primary ml-2" href="/postman">Изменить состояние заказа</a>
+                    <a class="btn btn-primary ml-2" href="/list">Выбрать заказ</a>
                 {% elif not current_user.is_postman %}
                     <a class="btn btn-primary ml-2" href="/customer">Перейти к покупкам</a>
+                    <a class="btn btn-primary ml-2" href="/orders">Текущие заказы</a>
                 {% endif %}
             {% else %}
                 <div class="alert alrt-dark">
