@@ -93,12 +93,11 @@ def postman():
             is_waiting=form.statuses.data == "waiting",
             is_done=form.statuses.data == "done"
         )
-        order.title = form.title.data
         current_user.order.append(order)
         session.merge(current_user)
         session.commit()
         return redirect('/')
-    return render_template('order_status.html', title='Добавленные заказы',
+    return render_template('order_status.html',
                            form=form)
 
 
@@ -112,7 +111,7 @@ def customer():
         current_user.order.append(order)
         session.merge(current_user)
         session.commit()
-        return redirect('/orders')
+        return redirect('/')
     return render_template('order.html', title='Добавленные заказы',
                            form=form)
 
