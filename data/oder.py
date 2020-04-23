@@ -23,6 +23,12 @@ class Order(SqlAlchemyBase):
     your_name = sqlalchemy.Column(sqlalchemy.String, nullable=True)
     phone = sqlalchemy.Column(sqlalchemy.String, nullable=True)
 
+    is_adopted = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    is_getting_ready = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    is_delivering = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    is_waiting = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+    is_done = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
+
     created_date = sqlalchemy.Column(sqlalchemy.DateTime,
                                      default=datetime.datetime.now)
 

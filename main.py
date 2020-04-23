@@ -12,6 +12,7 @@ from forms.register import RegisterForm
 from forms.login import LoginForm
 from forms.orders_list import ListForm
 from data.users import User
+from forms.order_status import StatusForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -90,6 +91,26 @@ def orders_list():
         session.commit()
         return redirect('/postman')
     return render_template('orders_list.html',
+                           form=form)
+
+
+@app.route('/postman', methods=['GET', 'POST'])
+def postman1():
+    form = StatusForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        order = Order(
+            is_adopted=form.statuses.data == "adopted",
+            is_getting_ready=form.statuses.data == "getting_ready",
+            is_delivering=form.statuses.data == "delivering",
+            is_waiting=form.statuses.data == "waiting",
+            is_done=form.statuses.data == "done"
+        )
+        current_user.order.append(order)
+        session.merge(current_user)
+        session.commit()
+        return redirect('/')
+    return render_template('order_status.html',
                            form=form)
 
 
