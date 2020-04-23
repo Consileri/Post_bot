@@ -10,6 +10,7 @@ from data.oder import Order
 from forms.order import OrderForm
 from forms.register import RegisterForm
 from forms.login import LoginForm
+from forms.orders_list import ListForm
 from data.users import User
 
 app = Flask(__name__)
@@ -78,6 +79,19 @@ def login():
 def logout():
     logout_user()
     return redirect("/")
+
+
+@app.route('/list', methods=['GET', 'POST'])
+def orders_list():
+    form = ListForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        session.merge(current_user)
+        session.commit()
+        return redirect('/postman')
+    return render_template('orders_list.html',
+                           form=form)
+
 
 
 @app.route('/customer', methods=['GET', 'POST'])
