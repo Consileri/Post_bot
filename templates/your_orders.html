@@ -14,7 +14,19 @@
         </div>
 
         <div class="text-success mt-2">
-            Статус заказа -
+            {% if item.is_not_adopted %}
+                Не принят
+            {% elif item.is_adopted %}
+                Принят
+            {% elif item.is_getting_ready %}
+                Готовится к отправке
+            {% elif item.is_delivering %}
+                Доставляется
+            {% elif item.is_waiting %}
+                Ожидает отгрузки
+            {% elif item.is_done %}
+                Завершен
+            {% endif %}
         </div>
         {% if current_user.is_authenticated and current_user == item.user %}
             <div class="mt-2 mb-2">
