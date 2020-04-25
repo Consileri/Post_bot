@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Введите код доставщика</h1>
+    <form action="/validate" method="post">
+        {{ form.hidden_tag() }}
+        {{ form.csrf_token }}
+
+        {{ form.email() }}
+        {{ form.password() }}
+        {{ form.password_again() }}
+        {{ form.name() }}
+        {{ form.selection() }}
+
+        {% if message %}
+            <p class="alert alert-danger" role="alert">{{message}}</p>
+        {% endif %}
+
+        <p>
+            {{ form.code.label }}<br>
+            {{ form.code(class="form-control") }}<br>
+            {% for error in form.code.errors %}
+                <p class="alert alert-danger" role="alert">
+                    {{ error }}
+                </p>
+            {% endfor %}
+        </p>
+
+        <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    </form>
+{% endblock %}
+

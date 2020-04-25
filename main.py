@@ -13,6 +13,7 @@ from forms.login import LoginForm
 from forms.orders_list import ListForm
 from data.users import User
 from forms.order_status import StatusForm
+from forms.validate import ValidateForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -46,17 +47,46 @@ def reqister():
             return render_template('register.html', title='Регистрация',
                                    form=form,
                                    message="Такой пользователь уже есть")
-        user = User(
-            name=form.name.data,
-            email=form.email.data,
-            about=form.about.data,
-            is_postman=form.selection.data == "value"
-        )
-        user.set_password(form.password.data)
-        session.add(user)
-        session.commit()
-        return redirect('/login')
+
+        if form.selection.data == 'customer':
+            user = User(
+                name=form.name.data,
+                email=form.email.data,
+                is_postman=form.selection.data == "postman"
+            )
+            user.set_password(form.password.data)
+            session.add(user)
+            session.commit()
+            return redirect('/')
+        elif form.selection.data == 'postman':
+            form_1 = ValidateForm()
+            form_1.email.data = form.email.data
+            form_1.password.data = form.password.data
+            form_1.password_again.data = form.password_again.data
+            form_1.name.data = form.name.data
+            form_1.selection.data = form.selection.data
+            return render_template('validate.html', title='Валидация', form=form_1)
     return render_template('register.html', title='Регистрация', form=form)
+
+
+@app.route('/validate', methods=['GET', 'POST'])
+def validate():
+    form = ValidateForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        if form.code.data == '111':
+            user = User(
+                name=form.name.data,
+                email=form.email.data,
+                is_postman=form.selection.data == "postman"
+            )
+            user.set_password(form.password.data)
+            session.add(user)
+            session.commit()
+            login_user(user)
+            return redirect('/')
+        return render_template('validate.html', title='Валидация', form=form, message='Неверный код')
+    return render_template('validate.html', title='Валидация', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -95,7 +125,7 @@ def orders_list():
 
 
 @app.route('/postman', methods=['GET', 'POST'])
-def postman1():
+def postman():
     form = StatusForm()
     if form.validate_on_submit():
         session = db_session.create_session()
@@ -116,7 +146,7 @@ def postman1():
 
 
 @app.route('/customer', methods=['GET', 'POST'])
-def postman():
+def customer():
     form = OrderForm()
     if form.validate_on_submit():
         session = db_session.create_session()
