@@ -5,6 +5,7 @@ from flask_restful import Api
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
 
+from config import code_for_validation
 from data import db_session
 from data.oder import Order
 from forms.order import OrderForm
@@ -74,7 +75,7 @@ def validate():
     form = ValidateForm()
     if form.validate_on_submit():
         session = db_session.create_session()
-        if form.code.data == '111':
+        if form.code.data == code_for_validation:
             user = User(
                 name=form.name.data,
                 email=form.email.data,
