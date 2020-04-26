@@ -9,6 +9,5 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired()])
     password_again = PasswordField('Повторите пароль', validators=[DataRequired()])
     name = StringField('Имя пользователя', validators=[DataRequired()])
-    about = TextAreaField("Немного о себе")
-    selection = RadioField('Label', choices=[('value', 'Я почтальон'), ('value_two', 'Я покупатель')])
+    selection = RadioField('Label', choices=[('postman', 'Я почтальон'), ('customer', 'Я покупатель')])
     submit = SubmitField('Войти')

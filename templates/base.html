@@ -15,8 +15,10 @@
             <a class="navbar-brand text-warning" href="/">Вернуться на главную</a>
             <a class="navbar-brand text-danger" href="/logout">Выйти</a>
         {% else %}
-            <a class="btn btn-primary ml-2" href="/register">Зарегистрироваться</a>
-            <a class="btn btn-success ml-2" href="/login">Войти</a>
+            <div class="btn-group" role="group" aria-label="Basic">
+                <a class="btn btn-outline-danger my-2 my-sm-0" href="/register">Зарегистрироваться</a>
+                <a class="btn btn-outline-warning my-2 my-sm-0" href="/login">Войти</a>
+            </div>
         {% endif %}
     </header>
     <div class="container bg-light pb-4">
