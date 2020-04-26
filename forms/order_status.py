@@ -4,11 +4,8 @@ from wtforms.validators import DataRequired
 
 
 class StatusForm(FlaskForm):
-    is_adopted = BooleanField('Принят')
-    is_not_adopted = BooleanField('Не принят')
-    is_getting_ready = BooleanField('Готовится к отправке')
-    is_delivering = BooleanField('Доставляется')
-    is_waiting = BooleanField('Ожидает отгрузки')
-    is_done = BooleanField('Завершен')
+    statuses = RadioField('Label', choices=[('adopted', 'Принят'), ('getting_ready', 'Готовится к отправке'),
+                                            ('delivering', 'Доставляется'), ('waiting', 'Ожидает отгрузки'),
+                                            ('done', 'Завершен'), ('not_adopted', 'Не принят')])
 
     submit = SubmitField('Изменить')
