@@ -8,15 +8,19 @@
     {% if message %}
         <p class="alert alert-danger" role="alert">{{message}}</p>
     {% endif %}
-    <p>
-        {{ form.hidden_tag() }}
-        {{ form.statuses }}
-        {% for error in form.statuses.errors %}
-            <p class="alert alert-danger" role="alert">
-                {{ error }}
-            </p>
-        {% endfor %}
-    </p>
+
+    <p>{{ form.is_adopted() }} {{ form.is_adopted.label }}</p>
+
+    <p>{{ form.is_not_adopted() }} {{ form.is_not_adopted.label }}</p>
+
+    <p>{{ form.is_getting_ready() }} {{ form.is_getting_ready.label }}</p>
+
+    <p>{{ form.is_delivering() }} {{ form.is_delivering.label }}</p>
+
+    <p>{{ form.is_waiting() }} {{ form.is_waiting.label }}</p>
+
+    <p>{{ form.is_done() }} {{ form.is_done.label }}</p>
+
     <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
 </form>
 {% endblock %}

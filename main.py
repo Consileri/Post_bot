@@ -4,6 +4,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, \
 from flask_restful import Api
 from werkzeug.exceptions import abort
 from werkzeug.utils import redirect
+from random import  randint
 
 from data import db_session
 from data.oder import Order
@@ -84,34 +85,45 @@ def logout():
 
 @app.route('/list', methods=['GET', 'POST'])
 def orders_list():
-    form = ListForm()
-    if form.validate_on_submit():
-        session = db_session.create_session()
-        session.merge(current_user)
-        session.commit()
-        return redirect('/postman')
-    return render_template('orders_list.html',
-                           form=form)
+    session = db_session.create_session()
+    orders = session.query(Order)
+    session.merge(current_user)
+    session.commit()
+    return render_template('orders_list.html', orders=orders)
 
 
-@app.route('/postman', methods=['GET', 'POST'])
-def postman1():
+@app.route('/postman/<int:id>', methods=['GET', 'POST'])
+@login_required
+def postman1(id):
     form = StatusForm()
+    if request.method == "GET":
+        session = db_session.create_session()
+        order = session.query(Order).filter(Order.id == id).first()
+        if order:
+            form.is_adopted.data = order.is_adopted
+            form.is_not_adopted.data = order.is_not_adopted
+            form.is_getting_ready.data = order.is_getting_ready
+            form.is_delivering.data = order.is_delivering
+            form.is_waiting.data = order.is_waiting
+            form.is_done.data = order.is_done
+
+        else:
+            abort(404)
     if form.validate_on_submit():
         session = db_session.create_session()
-        order = Order(
-            is_adopted=form.statuses.data == "adopted",
-            is_getting_ready=form.statuses.data == "getting_ready",
-            is_delivering=form.statuses.data == "delivering",
-            is_waiting=form.statuses.data == "waiting",
-            is_done=form.statuses.data == "done"
-        )
-        current_user.order.append(order)
-        session.merge(current_user)
-        session.commit()
-        return redirect('/')
-    return render_template('order_status.html',
-                           form=form)
+        order = session.query(Order).filter(Order.id == id).first()
+        if order:
+            order.is_adopted = form.is_adopted.data
+            order.is_not_adopted = form.is_not_adopted.data
+            order.is_getting_ready = form.is_getting_ready.data
+            order.is_delivering = form.is_delivering.data
+            order.is_waiting = form.is_waiting.data
+            order.is_done = form.is_done.data
+            session.commit()
+            return redirect('/list')
+        else:
+            abort(404)
+    return render_template('order_status.html', form=form)
 
 
 
@@ -131,6 +143,7 @@ def postman():
         order.floor = form.floor.data
         order.your_name = form.your_name.data
         order.phone = form.phone.data
+        order.id = randint(1, 10000000)
         current_user.order.append(order)
         session.merge(current_user)
         session.commit()
@@ -141,7 +154,7 @@ def postman():
 
 @app.route('/orders', methods=['GET', 'POST'])
 @login_required
-def orders():
+def orderss():
     session = db_session.create_session()
 
     if current_user.is_authenticated:

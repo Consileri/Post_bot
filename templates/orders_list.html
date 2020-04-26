@@ -2,12 +2,20 @@
 
 {% block content %}
 <h1>Изменение статуса заказа</h1>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    {{ form.csrf_token }}
-    {% if message %}
-        <p class="alert alert-danger" role="alert">{{message}}</p>
-    {% endif %}
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-</form>
+{% for item in orders%}
+    <div class="container border border-primary rounded mb-3 bg-white">
+        <h2 class="text-primary">{{item.title}}</h2>
+        <div>
+            {{item.content}}
+        </div>
+        <div class="text-muted mt-2">
+            Автор - {{item.user.name}}, Дата написания - {{item.created_date}}
+        </div>
+        {% if current_user.is_authenticated and current_user.is_postman %}
+            <div class="mt-2 mb-2">
+                <a href="/postman/{{ item.id }}" class="btn btn-warning">Изменить статус</a>
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
 {% endblock %}
