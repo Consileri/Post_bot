@@ -8,6 +8,10 @@ status = ''
 order_id = ''
 sessionStorage = {}
 
+def send_msg(msg, user_id, rndm, vk):
+    vk.message.send(user_id=user_id,
+                    message=msg,
+                    random_id=rndm)
 
 def main():
     vk_session = vk_api.VkApi(
@@ -29,8 +33,9 @@ def main():
 def handle_dialog(event, vk):
 
     user_id = event.obj.message['from_id']
-    message = event.obj.message['text']
     rndm = random.randint(0, 2 ** 64)
+    send_msg()
+    message = event.obj.message['text']
     if user_id in sessionStorage:
         quests = sessionStorage[user_id]['last_question']
         if quests == 1:
@@ -50,16 +55,22 @@ def handle_dialog(event, vk):
                     role = message
                     sessionStorage[user_id]['last_question'] = 3
                 elif message == 'Заказчик' or 'заказчик':
-                    message = message.lower()
-                    role = message
-                    sessionStorage[user_id]['last_question'] = 3
+                    message.lower()
+                    sessionStorage[user_id]['last_question'] = 3 #авторизация завершена
+                    send_msg('Вы успешно авторизованы как заказчик! Теперь Вам доступна "Помощь"', user_id, rndm, vk)
+                    break
                 else:
-                    vk.messages.send(user_id=user_id,
-                                     message="Вам нужно написать 'почтальон' или 'заказчик'")
+                    send_msg("Вам нужно написать 'почтальон' или 'заказчик'", user_id, rndm, vk)
                     continue
             return
-        if quests == 3:
-
+        if quests == 3 and message == 'почтальон':
+            if message == 'Помощь' or 'помощь':
+                send_msg("По всем вопросам обращаться\nСписок доступных команд", user_id, rndm, vk)
+            return
+        if quests == 3 and message == 'заказчик':
+            if message == 'Помощь' or 'помощь':
+                send_msg("По всем вопросам обращаться\nСписок доступных команд", user_id, rndm, vk)
+            return
 
     else:
         vk.messages.send(user_id=user_id,
