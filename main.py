@@ -58,6 +58,7 @@ def reqister():
             user.set_password(form.password.data)
             session.add(user)
             session.commit()
+            login_user(user)
             return redirect('/')
         elif form.selection.data == 'postman':
             form_1 = ValidateForm()
@@ -143,7 +144,6 @@ def postman():
         return redirect('/')
     return render_template('order_status.html',
                            form=form)
-
 
 
 @app.route('/customer', methods=['GET', 'POST'])
