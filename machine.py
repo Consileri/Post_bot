@@ -8,10 +8,12 @@ status = ''
 order_id = ''
 sessionStorage = {}
 
+
 def send_msg(msg, user_id, rndm, vk):
     vk.message.send(user_id=user_id,
                     message=msg,
                     random_id=rndm)
+
 
 def main():
     vk_session = vk_api.VkApi(
@@ -27,7 +29,6 @@ def main():
             print('Для меня от:', event.obj.message['from_id'])
             print('Текст:', event.obj.message['text'])
             handle_dialog(event, vk)
-
 
 
 def handle_dialog(event, vk):
@@ -76,8 +77,6 @@ def handle_dialog(event, vk):
             if message == 'Статус' or message == 'статус':
                 send_msg()
 
-
-
     else:
         vk.messages.send(user_id=user_id,
                          message="Вас приветствует Post Bot! Как нам Вас стоит называть?(Напишите только имя)",
@@ -86,6 +85,7 @@ def handle_dialog(event, vk):
             'last_question' : 1      # 1 - как вас зовут
                                    }
         return
+
 
 if __name__ == '__main__':
     main()
