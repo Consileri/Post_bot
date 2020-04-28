@@ -1,8 +1,8 @@
-"""добавили признак публикации
+"""Начальное состояние базы данных
 
-Revision ID: 9543cd1e7645
+Revision ID: c696e45afa84
 Revises: 
-Create Date: 2020-04-27 20:23:03.758321
+Create Date: 2020-04-28 21:44:34.287907
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9543cd1e7645'
+revision = 'c696e45afa84'
 down_revision = None
 branch_labels = None
 depends_on = None
