@@ -6,24 +6,48 @@
     <div class="container border border-success rounded mb-3 bg-white">
         <h2 class="text-info">Заказ #{{ loop.index }}</h2>
         <div class="text-dark mt-2">
-            Пользователь - {{ item.user.name }}, Дата заказа - {{ item.created_date }}
+            Заказ оформлен на имя "{{ item.your_name }}"
         </div>
-        <div class="text-primary mt-2">
-            Адрес - {{ item.country }}, {{ item.town }}, {{ item.house }}
+        <div class="text-dark mt-2">
+            Дата заказа - {{ item.created_date }}
         </div>
         <div class="text-success mt-2">
+            id Заказа: {{ item.id }}
+        </div>
+        <div class="text-primary mt-2">
+            Адрес: страна - {{ item.country }}; город -  {{ item.town }}; улица - {{ item.street }};
+            дом - {{ item.house }}
+        </div>
+
+        <div class="text-info mt-2">
+            Ваш номер телефона: {{ item.phone }}
+        </div>
+
+        <div>
             {% if item.is_not_adopted %}
-                Не принят
+                <div class="text-danger mt-2">
+                    Не принят.
+                </div>
             {% elif item.is_adopted %}
-                Принят
+                <div class="text-success mt-2">
+                    Принят.
+                </div>
             {% elif item.is_getting_ready %}
-                Готовится к отправке
+                <div class="text-warning mt-2">
+                    Готовится к отправке...
+                </div>
             {% elif item.is_delivering %}
-                Доставляется
+                <div class="text-primary mt-2">
+                    Доставляется...
+                </div>
             {% elif item.is_waiting %}
-                Ожидает отгрузки
+                <div class="text-warning mt-2">
+                    Ожидает отгрузки...
+                </div>
             {% elif item.is_done %}
-                Завершен
+                <div class="text-success mt-2">
+                    Завершен.
+                </div>
             {% endif %}
         </div>
         {% if current_user.is_authenticated and current_user.is_postman %}

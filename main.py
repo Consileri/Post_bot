@@ -183,6 +183,49 @@ def orders():
     return render_template("your_orders.html", orders=orders)
 
 
+@app.route('/orders/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_orders(id):
+    form = OrderForm()
+    if request.method == "GET":
+        session = db_session.create_session()
+        orders = session.query(Order).filter(Order.id == id,
+                                          Order.user == current_user).first()
+        if orders:
+            form.country.data = orders.country
+            form.town.data = orders.town
+            form.street.data = orders.street
+            form.house.data = orders.house
+            form.flat.data = orders.flat
+            form.body.data = orders.body
+            form.porch.data = orders.porch
+            form.floor.data = orders.floor
+            form.your_name.data = orders.your_name
+            form.phone.data = orders.phone
+        else:
+            abort(404)
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        orders = session.query(orders).filter(orders.id == id,
+                                          orders.user == current_user).first()
+        if orders:
+            orders.country = form.country.data
+            orders.town = form.town.data
+            orders.street = form.street.data
+            orders.house = form.house.data
+            orders.flat = form.flat.data
+            orders.body = form.body.data
+            orders.porch = form.porch.data
+            orders.floor = form.floor.data
+            orders.your_name = form.your_name.data
+            orders.phone = form.phone.data
+            session.commit()
+            return redirect('/orders')
+        else:
+            abort(404)
+    return render_template('orders.html', title='Редактирование новости', form=form)
+
+
 @app.route('/orders_delete/<int:id>', methods=['GET', 'POST'])
 @login_required
 def orders_delete(id):
