@@ -2,11 +2,16 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
 from config import code_for_validation
+from data.users import User
+from data import db_session
+from data.oder import Order
 
 dilivered_flag = False
 status = ''
 order_id = ''
 sessionStorage = {}
+session = db_session.create_session()
+order_status = ''
 
 
 def main():
@@ -124,6 +129,21 @@ def handle_dialog(event, vk):
                 vk.message.send(user_id=user_id,
                                 message='Введите номер вашего заказа',
                                 random_id=rndm)
+                order = session.query(Order).filter(Order.id == sessionStorage[user_id]['last_question']).first()
+                if order.is_adopted:
+                    order_status = 'Принят'
+                if order.is_getting_ready:
+                    order_status = 'Готовится к отправке'
+                if order.is_delivering:
+                    order_status = 'Доставляетс'
+                if order.is_waiting:
+                    order_status = 'Ожидает отгрузки'
+                if order.is_done:
+                    order_status = 'Завершен'
+                if order.is_not_adopted:
+                    order_status = 'Пока не принят'
+                session.commit()
+                
                 return
     else:
         vk.messages.send(user_id=user_id,
@@ -134,6 +154,21 @@ def handle_dialog(event, vk):
                                        }
         return
 
-
+    
+    if sessionStorage[user_id]['activity'] == 'почтальон':
+        user = User(
+            name=sessionStorage[user_id]['name'],
+            email=sessionStorage[user_id]['mail'],
+            is_postman=True)
+    else:
+        user = User(
+            name=sessionStorage[user_id]['name'],
+            email=sessionStorage[user_id]['mail'],
+            is_postman=False)
+    user.set_password(sessionStorage[user_id]['password'])
+    session.add(user)
+    session.commit()
+    
+    
 if __name__ == '__main__':
     main()
