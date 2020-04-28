@@ -1,3 +1,4 @@
+
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
@@ -9,20 +10,16 @@ order_id = ''
 sessionStorage = {}
 
 
-def send_msg(msg, user_id, rndm, vk):
-    vk.message.send(user_id=user_id,
-                    message=msg,
-                    random_id=rndm)
-
-
 def main():
     vk_session = vk_api.VkApi(
         token="68b38a0e0b7e909d8535d5508795ae46d9c6175ffd694c28428dd3e63a0738d737667112f465e297887c8")
     vk = vk_session.get_api()
 
+
     longpoll = VkBotLongPoll(vk_session, 193785456)
 
     for event in longpoll.listen():
+
         if event.type == VkBotEventType.MESSAGE_NEW:
             print(event)
             print('Новое сообщение:')
@@ -31,11 +28,10 @@ def main():
             handle_dialog(event, vk)
 
 
+
 def handle_dialog(event, vk):
 
     user_id = event.obj.message['from_id']
-    rndm = random.randint(0, 2 ** 64)
-    send_msg()
     message = event.obj.message['text']
     if user_id in sessionStorage:
         quests = sessionStorage[user_id]['last_question']
@@ -59,23 +55,32 @@ def handle_dialog(event, vk):
                     message.lower()
                     sessionStorage[user_id]['activity'] = message
                     sessionStorage[user_id]['last_question'] = 3 #авторизация завершена
-                    send_msg('Вы успешно авторизованы как заказчик! Теперь Вам доступна "Помощь"', user_id, rndm, vk)
+                    vk.message.send(user_id=user_id,
+                                    message='Вы успешно авторизованы как заказчик! Теперь Вам доступна "Помощь"',
+                                    random_id=rndm)
                     break
                 else:
-                    send_msg("Вам нужно написать 'почтальон' или 'заказчик'", user_id, rndm, vk)
+                    vk.message.send(user_id=user_id,
+                                    message="Вам нужно написать 'почтальон' или 'заказчик'",
+                                    random_id=rndm)
                     continue
             return
         if quests == 3 and sessionStorage[user_id]['activity'] == 'почтальон':
             if message == 'Помощь' or 'помощь':
-                send_msg("По всем вопросам обращаться\nhttps://vk.com/hakureireimu", user_id, rndm, vk)
+                vk.message.send(user_id=user_id,
+                                message="По всем вопросам обращаться\nhttps://vk.com/hakureireimu",
+                                random_id=rndm)
             return
         if quests == 3 and sessionStorage[user_id]['activity'] == 'заказчик':
             if message == 'Помощь' or 'помощь':
-                send_msg("По всем вопросам обращаться\nhttps://vk.com/hakureireimu\nСписок доступных команд\nСтатус - статус текущего заказа\n"
-                         "", user_id, rndm, vk)
+                vk.message.send(user_id=user_id,
+                                message="По всем вопросам обращаться\nhttps://vk.com/hakureireimu\nСписок доступных команд\nСтатус - статус текущего заказа",
+                                random_id=rndm)
                 return
             if message == 'Статус' or message == 'статус':
-                send_msg()
+                pass
+
+
 
     else:
         vk.messages.send(user_id=user_id,
@@ -85,7 +90,6 @@ def handle_dialog(event, vk):
             'last_question' : 1      # 1 - как вас зовут
                                    }
         return
-
 
 if __name__ == '__main__':
     main()
