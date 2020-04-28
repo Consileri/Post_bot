@@ -11,6 +11,7 @@
         <h2 class="text-info">Заказ #{{ loop.index }}</h2>
         <div class="text-dark mt-2">
             Пользователь - {{ item.user.name }}, Дата заказа - {{ item.created_date }}
+            id Заказа: {{item.id}}
         </div>
         <div class="text-primary mt-2">
             Адрес - {{ item.country }}, {{ item.town }}, {{ item.house }}
