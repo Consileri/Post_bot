@@ -108,6 +108,16 @@ def login():
     return render_template('login.html', title='Авторизация', form=form)
 
 
+@app.route('/help', methods=['GET', 'POST'])
+def help():
+    return render_template('help.html')
+
+
+@app.route('/contacts', methods=['GET', 'POST'])
+def contacts():
+    return render_template('contacts.html')
+
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -206,8 +216,8 @@ def edit_orders(id):
             abort(404)
     if form.validate_on_submit():
         session = db_session.create_session()
-        orders = session.query(orders).filter(orders.id == id,
-                                          orders.user == current_user).first()
+        orders = session.query(Order).filter(Order.id == id,
+                                          Order.user == current_user).first()
         if orders:
             orders.country = form.country.data
             orders.town = form.town.data
@@ -223,7 +233,7 @@ def edit_orders(id):
             return redirect('/orders')
         else:
             abort(404)
-    return render_template('orders.html', title='Редактирование новости', form=form)
+    return render_template('order.html', title='Редактирование заказа', form=form)
 
 
 @app.route('/orders_delete/<int:id>', methods=['GET', 'POST'])

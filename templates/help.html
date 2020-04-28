@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="text-center">Помощь</h1>
+
+    <div class="bd-example" align="middle">
+        <img src="{{url_for('static', filename='ques.png')}}" align="middle" />
+    </div>
+
+    <div class="alert alert-danger" role="alert">
+        <h5 class="text-center">[!] Чтобы воспользоваться полным функционалом нашего сайта,
+        сперва зарегистрируйтесь [!]</h5>
+    </div>
+
+    <div class="text-center">
+        <a class="btn btn-primary ml-2" href="/contacts">Контакты -></a>
+    </div>
+{% endblock %}

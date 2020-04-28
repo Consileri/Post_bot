@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="text-center">Контакты</h1>
+
+    <div class="alert alert-danger" role="alert">
+        <h5 class="text-center">Администраторы - andrey.d.zhogov@icloud.com ; https://vk.com/hakureireimu ;
+        https://vk.com/yieskela</h5>
+    </div>
+
+    <div class="alert alert-primary" role="alert">
+        <h5 class="text-center">Редакторы - [должность свободна].</h5>
+    </div>
+
+    <div class="bd-example" align="middle">
+        <img src="{{url_for('static', filename='tg.png')}}" align="middle" />
+    </div>
+{% endblock %}
