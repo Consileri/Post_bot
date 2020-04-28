@@ -18,10 +18,12 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import sys
-sys.path.insert(0, '/users/andrey/PycharmProjects/Post_bot')
+sys.path.insert(0, "/users/andrey/PycharmProjects/Post_bot")
 from data.db_session import SqlAlchemyBase
 import data.__all_models
+
 target_metadata = SqlAlchemyBase.metadata
+
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
