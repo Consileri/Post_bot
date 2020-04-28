@@ -11,7 +11,6 @@ status = ''
 order_id = ''
 sessionStorage = {}
 session = db_session.create_session()
-order_status = ''
 
 
 def main():
