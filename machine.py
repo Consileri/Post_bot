@@ -1,8 +1,7 @@
-
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import random
-
+from config import code_for_validation
 
 dilivered_flag = False
 status = ''
@@ -55,33 +54,75 @@ def handle_dialog(event, vk):
                     message.lower()
                     sessionStorage[user_id]['activity'] = message
                     sessionStorage[user_id]['last_question'] = 3 #авторизация завершена
-                    vk.message.send(user_id=user_id,
-                                    message='Вы успешно авторизованы как заказчик! Теперь Вам доступна "Помощь"',
+                    vk.messages.send(user_id=user_id,
+                                    message='Вы успешно авторизованы как заказчик! Теперь Вам нужно указать вашу почту',
                                     random_id=rndm)
                     break
                 else:
-                    vk.message.send(user_id=user_id,
+                    vk.messages.send(user_id=user_id,
                                     message="Вам нужно написать 'почтальон' или 'заказчик'",
                                     random_id=rndm)
                     continue
             return
-        if quests == 3 and sessionStorage[user_id]['activity'] == 'почтальон':
+        if quests == 3:
+            sessionStorage[user_id]['mail'] = None
+            mail = message.split()
+            counter = 0
+            for i in mail:
+                if i == '@':
+                    counter += 1
+            while sessionStorage[user_id]['mail'] == None:
+                if counter == 1:
+                    vk.messages.send(user_id=user_id,
+                                     message="Теперь придумайте пароль",
+                                     random_id=rndm)
+                    sessionStorage[user_id]['mail'] = message
+                    sessionStorage[user_id]['last_question'] = 4 # Запрос эл. почты
+                    return
+                else:
+                    vk.messages.send(user_id=user_id,
+                                     message="Почта не действительна",
+                                     random_id=rndm)
+                    continue
+        if quests == 4:
+            sessionStorage[user_id]['password'] = message
+            sessionStorage[user_id]['last_question'] = 5 # Создание пароля
+            return
+        if quests == 5 and sessionStorage[user_id]['activity'] == 'почтальон':
+            sessionStorage[user_id]['validation'] = False
+            vk.messages.send(user_id=user_id,
+                             message="Введите ваш код валидации",
+                             random_id=rndm)
+            while sessionStorage[user_id]['validation'] == False:
+                if message == code_for_validation:
+                    sessionStorage[user_id]['validation'] = True
+                    vk.messages.send(user_id=user_id,
+                                     message="Вы ввели верный код валидации. Вы успешно приняты!",
+                                     random_id=rndm)
+                    sessionStorage[user_id]['last_question'] = 6
+                    return
+                else:
+                    vk.messages.send(user_id=user_id,
+                                     message="Попробуйте ещё раз",
+                                     random_id=rndm)
+                    continue
+        if quests == 6 and sessionStorage[user_id]['activity'] == 'почтальон':
             if message == 'Помощь' or 'помощь':
-                vk.message.send(user_id=user_id,
+                vk.messages.send(user_id=user_id,
                                 message="По всем вопросам обращаться\nhttps://vk.com/hakureireimu",
                                 random_id=rndm)
-            return
-        if quests == 3 and sessionStorage[user_id]['activity'] == 'заказчик':
+                return
+        if quests == 5 and sessionStorage[user_id]['activity'] == 'заказчик':
             if message == 'Помощь' or 'помощь':
-                vk.message.send(user_id=user_id,
+                vk.messages.send(user_id=user_id,
                                 message="По всем вопросам обращаться\nhttps://vk.com/hakureireimu\nСписок доступных команд\nСтатус - статус текущего заказа",
                                 random_id=rndm)
                 return
             if message == 'Статус' or message == 'статус':
-                pass
-
-
-
+                vk.message.send(user_id=user_id,
+                                message='Введите номер вашего заказа',
+                                random_id=rndm)
+                return
     else:
         vk.messages.send(user_id=user_id,
                          message="Вас приветствует Post Bot! Как нам Вас стоит называть?(Напишите только имя)",
