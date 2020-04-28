@@ -15,6 +15,7 @@ from forms.orders_list import ListForm
 from data.users import User
 from forms.order_status import StatusForm
 from forms.validate import ValidateForm
+from random import randint
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -116,34 +117,32 @@ def logout():
 
 @app.route('/list', methods=['GET', 'POST'])
 def orders_list():
-    form = ListForm()
-    if form.validate_on_submit():
-        session = db_session.create_session()
-        session.merge(current_user)
-        session.commit()
-        return redirect('/postman')
+    session = db_session.create_session()
+    orders = session.query(Order)
+    session.merge(current_user)
+    session.commit()
     return render_template('orders_list.html',
-                           form=form)
+                           orders=orders)
 
 
-@app.route('/postman', methods=['GET', 'POST'])
-def postman():
+@app.route('/postman/<int:id>', methods=['GET', 'POST'])
+def postman(id):
     form = StatusForm()
     if form.validate_on_submit():
         session = db_session.create_session()
-        order = Order(
-            is_adopted=form.statuses.data == "adopted",
-            is_getting_ready=form.statuses.data == "getting_ready",
-            is_delivering=form.statuses.data == "delivering",
-            is_waiting=form.statuses.data == "waiting",
-            is_done=form.statuses.data == "done"
-        )
-        current_user.order.append(order)
-        session.merge(current_user)
-        session.commit()
-        return redirect('/')
-    return render_template('order_status.html',
-                           form=form)
+        order = session.query(Order).filter(Order.id == id).first()
+        if order:
+            order.is_adopted = form.statuses.data == 'adopted'
+            order.is_getting_ready = form.statuses.data == 'getting_ready'
+            order.is_delivering = form.statuses.data == 'delivering'
+            order.is_waiting = form.statuses.data == 'waiting'
+            order.is_done = form.statuses.data == 'done'
+            order.is_not_adopted = form.statuses.data == 'not_adopted'
+            session.commit()
+            return redirect('/list')
+        else:
+            abort(404)
+    return render_template('order_status.html', form=form)
 
 
 @app.route('/customer', methods=['GET', 'POST'])
@@ -162,6 +161,7 @@ def customer():
         order.floor = form.floor.data
         order.your_name = form.your_name.data
         order.phone = form.phone.data
+        order.id = randint(1000000, 9999999)
         current_user.order.append(order)
         session.merge(current_user)
         session.commit()

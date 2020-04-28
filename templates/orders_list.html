@@ -2,12 +2,33 @@
 
 {% block content %}
 <h1>Изменение статуса заказа</h1>
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    {{ form.csrf_token }}
-    {% if message %}
-        <p class="alert alert-danger" role="alert">{{message}}</p>
-    {% endif %}
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
-</form>
+    {% for item in orders%}
+    <div class="container border border-success rounded mb-3 bg-white">
+        <h2 class="text-info">Заказ #{{ loop.index }}</h2>
+        <div class="text-dark mt-2">
+            Пользователь - {{ item.user.name }}, Дата заказа - {{ item.created_date }}
+        </div>
+
+        <div class="text-success mt-2">
+            {% if item.is_not_adopted %}
+                Не принят
+            {% elif item.is_adopted %}
+                Принят
+            {% elif item.is_getting_ready %}
+                Готовится к отправке
+            {% elif item.is_delivering %}
+                Доставляется
+            {% elif item.is_waiting %}
+                Ожидает отгрузки
+            {% elif item.is_done %}
+                Завершен
+            {% endif %}
+        </div>
+        {% if current_user.is_authenticated and current_user.is_postman %}
+            <div class="mt-2 mb-2">
+                <a href="/postman/{{ item.id }}" class="btn btn-warning">Изменить статус</a>
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
 {% endblock %}
