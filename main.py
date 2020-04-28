@@ -15,6 +15,7 @@ from forms.orders_list import ListForm
 from data.users import User
 from forms.order_status import StatusForm
 from forms.validate import ValidateForm
+from random import randint
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -160,6 +161,7 @@ def customer():
         order.floor = form.floor.data
         order.your_name = form.your_name.data
         order.phone = form.phone.data
+        order.id = randint(1000000, 9999999)
         current_user.order.append(order)
         session.merge(current_user)
         session.commit()
