@@ -54,30 +54,33 @@ def handle_dialog(event, vk):
                     message.lower()
                     sessionStorage[user_id]['activity'] = message
                     sessionStorage[user_id]['last_question'] = 3 #авторизация завершена
-                    vk.message.send(user_id=user_id,
+                    vk.messages.send(user_id=user_id,
                                     message='Вы успешно авторизованы как заказчик! Теперь Вам доступна "Помощь"',
                                     random_id=rndm)
                     break
                 else:
-                    vk.message.send(user_id=user_id,
+                    vk.messages.send(user_id=user_id,
                                     message="Вам нужно написать 'почтальон' или 'заказчик'",
                                     random_id=rndm)
                     continue
             return
         if quests == 3 and sessionStorage[user_id]['activity'] == 'почтальон':
             if message == 'Помощь' or 'помощь':
-                vk.message.send(user_id=user_id,
+                vk.messages.send(user_id=user_id,
                                 message="По всем вопросам обращаться\nhttps://vk.com/hakureireimu",
                                 random_id=rndm)
             return
         if quests == 3 and sessionStorage[user_id]['activity'] == 'заказчик':
             if message == 'Помощь' or 'помощь':
-                vk.message.send(user_id=user_id,
+                vk.messages.send(user_id=user_id,
                                 message="По всем вопросам обращаться\nhttps://vk.com/hakureireimu\nСписок доступных команд\nСтатус - статус текущего заказа",
                                 random_id=rndm)
                 return
             if message == 'Статус' or message == 'статус':
-                pass
+                vk.message.send(user_id=user_id,
+                                message='Введите номер вашего заказа',
+                                random_id=rndm)
+
 
 
 
