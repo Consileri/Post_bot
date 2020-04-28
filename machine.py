@@ -56,6 +56,7 @@ def handle_dialog(event, vk):
                     sessionStorage[user_id]['last_question'] = 3
                 elif message == 'Заказчик' or 'заказчик':
                     message.lower()
+                    sessionStorage[user_id]['activity'] = message
                     sessionStorage[user_id]['last_question'] = 3 #авторизация завершена
                     send_msg('Вы успешно авторизованы как заказчик! Теперь Вам доступна "Помощь"', user_id, rndm, vk)
                     break
@@ -63,14 +64,19 @@ def handle_dialog(event, vk):
                     send_msg("Вам нужно написать 'почтальон' или 'заказчик'", user_id, rndm, vk)
                     continue
             return
-        if quests == 3 and message == 'почтальон':
+        if quests == 3 and sessionStorage[user_id]['activity'] == 'почтальон':
             if message == 'Помощь' or 'помощь':
-                send_msg("По всем вопросам обращаться\nСписок доступных команд", user_id, rndm, vk)
+                send_msg("По всем вопросам обращаться\nhttps://vk.com/hakureireimu", user_id, rndm, vk)
             return
-        if quests == 3 and message == 'заказчик':
+        if quests == 3 and sessionStorage[user_id]['activity'] == 'заказчик':
             if message == 'Помощь' or 'помощь':
-                send_msg("По всем вопросам обращаться\nСписок доступных команд", user_id, rndm, vk)
-            return
+                send_msg("По всем вопросам обращаться\nhttps://vk.com/hakureireimu\nСписок доступных команд\nСтатус - статус текущего заказа\n"
+                         "", user_id, rndm, vk)
+                return
+            if message == 'Статус' or message == 'статус':
+                send_msg()
+
+
 
     else:
         vk.messages.send(user_id=user_id,
