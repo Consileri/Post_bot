@@ -12,6 +12,9 @@
         <div class="text-dark mt-2">
             Пользователь - {{ item.user.name }}, Дата заказа - {{ item.created_date }}
         </div>
+        <div class="text-primary mt-2">
+            Адрес - {{ item.country }}, {{ item.town }}, {{ item.house }}
+        </div>
 
         <div class="text-success mt-2">
             {% if item.is_not_adopted %}
