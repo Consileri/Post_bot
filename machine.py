@@ -27,17 +27,15 @@ def main():
             handle_dialog(event, vk)
 
 
-
 def handle_dialog(event, vk):
-
+    rndm = random.randint(0, 2 ** 64)
     user_id = event.obj.message['from_id']
     message = event.obj.message['text']
     if user_id in sessionStorage:
         quests = sessionStorage[user_id]['last_question']
         if quests == 1:
-            vk.message.send(user_id=user_id,
-                            message=f"Приятно познакомиться, {message}. Кем бы вы хотели быть, почтальоном или"
-                                    f" заказчиком?",
+            vk.messages.send(user_id=user_id,
+                            message=f"Приятно познакомиться, {message}. Кем бы вы хотели быть, почтальоном или"f" заказчиком?",
                             random_id=rndm)
             sessionStorage[user_id]['name'] = message
             sessionStorage[user_id]['last_question'] = 2 # 2 - Выбор деятельности
@@ -47,9 +45,13 @@ def handle_dialog(event, vk):
             role = sessionStorage[user_id]['activity']
             while role is None:
                 if message == 'Почтальон' or 'почтальон':
-                    message = message.lower()
-                    role = message
-                    sessionStorage[user_id]['last_question'] = 3
+                    message.lower()
+                    sessionStorage[user_id]['activity'] = message
+                    sessionStorage[user_id]['last_question'] = 3 #авторизация завершена
+                    vk.messages.send(user_id=user_id,
+                                    message='Вы успешно авторизованы как почтальон! Теперь Вам нужно указать вашу почту',
+                                    random_id=rndm)
+                    break
                 elif message == 'Заказчик' or 'заказчик':
                     message.lower()
                     sessionStorage[user_id]['activity'] = message
@@ -129,8 +131,9 @@ def handle_dialog(event, vk):
                          random_id=rndm)
         sessionStorage[user_id] = {
             'last_question' : 1      # 1 - как вас зовут
-                                   }
+                                       }
         return
+
 
 if __name__ == '__main__':
     main()
