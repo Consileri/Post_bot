@@ -2,6 +2,9 @@
 
 {% block content %}
     <h1>Ваша почта</h1>
+    <div class="mt-2 mb-2">
+        <a href="/mailbox" class="btn btn-primary">< Назад</a>
+    </div>
     {% for item in mails%}
     <div class="container border border-warning rounded mb-3 bg-white">
         <h2 class="text-success">Письмо #{{ loop.index }}</h2>
@@ -15,10 +18,16 @@
 
         {% if current_user.is_authenticated and current_user.email == item.email %}
             <div class="mt-2 mb-2">
-                <a href="/reply" class="btn btn-primary">Ответить</a>
-                <a href="/mail_delete/<int:id>" class="btn btn-danger">Удалить</a>
+                <a href="/reply/{{ item.id }}" class="btn btn-info">Ответить</a>
+            </div>
+        {% elif current_user.is_authenticated and current_user.email == item.email_sender %}
+            <div class="mt-2 mb-2">
+                <a href="/mail_delete/{{ item.id }}" class="btn btn-danger">Удалить</a>
             </div>
         {% endif %}
     </div>
     {% endfor %}
+    <div class="alert alert-warning" role="alert">
+        <h5 class="text-center">[!] Если вы обнаружили ошибку, сообщите в тех. поддержку [!]</h5>
+    </div>
 {% endblock %}

@@ -2,6 +2,9 @@
 
 {% block content %}
     <h1>Написать письмо</h1>
+    <div class="mt-2 mb-2">
+        <a href="/mailbox" class="btn btn-primary">< Назад</a>
+    </div>
      <form action="" method="post">
          {{ form.hidden_tag() }}
          {{ form.csrf_token }}

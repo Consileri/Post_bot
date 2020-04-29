@@ -202,7 +202,7 @@ def edit_orders(id):
     if request.method == "GET":
         session = db_session.create_session()
         orders = session.query(Order).filter(Order.id == id,
-                                          Order.user == current_user).first()
+                                             Order.user == current_user).first()
         if orders:
             form.country.data = orders.country
             form.town.data = orders.town
@@ -219,7 +219,7 @@ def edit_orders(id):
     if form.validate_on_submit():
         session = db_session.create_session()
         orders = session.query(Order).filter(Order.id == id,
-                                          Order.user == current_user).first()
+                                             Order.user == current_user).first()
         if orders:
             orders.country = form.country.data
             orders.town = form.town.data
@@ -262,6 +262,7 @@ def mailbox_send():
         mail.email = form.email.data
         mail.content = form.content.data
         mail.email_sender = current_user.email
+        mail.id = randint(1000000, 9999999)
         current_user.mail.append(mail)
         session.merge(current_user)
         session.commit()
@@ -282,6 +283,54 @@ def mailbox_rec():
 @app.route('/mailbox', methods=['GET', 'POST'])
 def mailbox():
     return render_template('mailbox.html')
+
+
+@app.route('/mail_delete/<int:id>', methods=['GET', 'POST'])
+@login_required
+def mail_delete(id):
+    session = db_session.create_session()
+    mails = session.query(Mail).filter(Mail.id == id,
+                                       Mail.user == current_user).first()
+
+    if mails:
+        session.delete(mails)
+        session.commit()
+    else:
+        abort(404)
+    return redirect('/mailbox')
+
+
+@app.route('/mailbox_from_me', methods=['GET', 'POST'])
+@login_required
+def mail_from_me():
+    session = db_session.create_session()
+    mails = session.query(Mail).filter(Mail.email_sender == current_user.email)
+    session.commit()
+    return render_template("mail_rec.html", mails=mails)
+
+
+@app.route('/reply/<int:id>', methods=['GET', 'POST'])
+@login_required
+def reply(id):
+    form = MailForm()
+    if request.method == "GET":
+        return redirect('/mailbox_send')
+
+    if form.validate_on_submit():
+        form = MailForm()
+        if form.validate_on_submit():
+            session = db_session.create_session()
+            mail = Mail()
+            mail.email = form.email.data
+            mail.content = form.content.data
+            mail.email_sender = current_user.email
+            mail.id = randint(1000000, 9999999)
+            current_user.mail.append(mail)
+            session.merge(current_user)
+            session.commit()
+            return redirect('/mailbox')
+        return render_template('mail_send.html', title='Написать письмо',
+                               form=form)
 
 
 @login_manager.user_loader

@@ -5,8 +5,13 @@
         <h1>Выберите действие</h1>
     </div>
 
+    <div class="bd-example" align="middle">
+        <img src="{{url_for('static', filename='err3.png')}}" align="middle" />
+    </div>
+
     <div class="text-center">
+        <a class="btn btn-success ml-2" href="/mailbox_rec">< Полученные письма</a>
         <a class="btn btn-primary ml-2" href="/mailbox_send">Отправить письмо</a>
-        <a class="btn btn-primary ml-2" href="/mailbox_rec">Просмотреть письма</a>
+        <a class="btn btn-success ml-2" href="/mailbox_from_me">Отправленные письма ></a>
     </div>
 {% endblock %}
