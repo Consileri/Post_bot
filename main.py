@@ -7,7 +7,9 @@ from werkzeug.utils import redirect
 
 from config import code_for_validation
 from data import db_session
+from data.mailbox_send import Mail
 from data.oder import Order
+from forms.mailbox_send import MailForm
 from forms.order import OrderForm
 from forms.register import RegisterForm
 from forms.login import LoginForm
@@ -248,6 +250,38 @@ def orders_delete(id):
     else:
         abort(404)
     return redirect('/orders')
+
+
+@app.route('/mailbox_send', methods=['GET', 'POST'])
+@login_required
+def mailbox_send():
+    form = MailForm()
+    if form.validate_on_submit():
+        session = db_session.create_session()
+        mail = Mail()
+        mail.email = form.email.data
+        mail.content = form.content.data
+        mail.email_sender = current_user.email
+        current_user.mail.append(mail)
+        session.merge(current_user)
+        session.commit()
+        return redirect('/mailbox')
+    return render_template('mail_send.html', title='Написать письмо',
+                           form=form)
+
+
+@app.route('/mailbox_rec', methods=['GET', 'POST'])
+@login_required
+def mailbox_rec():
+    session = db_session.create_session()
+    mails = session.query(Mail).filter(Mail.email == current_user.email)
+    session.commit()
+    return render_template("mail_rec.html", mails=mails)
+
+
+@app.route('/mailbox', methods=['GET', 'POST'])
+def mailbox():
+    return render_template('mailbox.html')
 
 
 @login_manager.user_loader

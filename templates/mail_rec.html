@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Ваша почта</h1>
+    {% for item in mails%}
+    <div class="container border border-warning rounded mb-3 bg-white">
+        <h2 class="text-success">Письмо #{{ loop.index }}</h2>
+        <div class="text-dark mt-2">
+            Отправитель - {{ item.email_sender }}
+        </div>
+
+        <div class="text-dark mt-2">
+            Содержимое - {{ item.content }}
+        </div>
+
+        {% if current_user.is_authenticated and current_user.email == item.email %}
+            <div class="mt-2 mb-2">
+                <a href="/reply" class="btn btn-primary">Ответить</a>
+                <a href="/mail_delete/<int:id>" class="btn btn-danger">Удалить</a>
+            </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% endblock %}

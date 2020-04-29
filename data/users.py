@@ -22,6 +22,7 @@ class User(SqlAlchemyBase, UserMixin):
     is_postman = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
 
     order = orm.relation("Order", back_populates='user')
+    mail = orm.relation("Mail", back_populates='user')
 
     def set_password(self, password):
         self.hashed_password = generate_password_hash(password)
