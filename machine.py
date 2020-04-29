@@ -116,20 +116,27 @@ def handle_dialog(event, vk):
                 vk.message.send(user_id=user_id,
                                 message='Введите номер вашего заказа',
                                 random_id=rndm)
-                sessionStorage[user_id]['last_question'] = 228 # заказ есть
+                
                 order = session.query(Order).filter(Order.id == message).first()
-                if order.is_adopted:
-                    sessionStorage[user_id]['status'] = 'Принят'
-                if order.is_getting_ready:
-                    sessionStorage[user_id]['status'] = 'Готовится к отправке'
-                if order.is_delivering:
-                    sessionStorage[user_id]['status'] = 'Доставляетс'
-                if order.is_waiting:
-                    sessionStorage[user_id]['status'] = 'Ожидает отгрузки'
-                if order.is_done:
-                    sessionStorage[user_id]['status'] = 'Завершен'
-                if order.is_not_adopted:
-                    sessionStorage[user_id]['status'] = 'Пока не принят'
+                if order:
+                    if order.is_adopted:
+                        sessionStorage[user_id]['status'] = 'Принят'
+                    if order.is_getting_ready:
+                        sessionStorage[user_id]['status'] = 'Готовится к отправке'
+                    if order.is_delivering:
+                        sessionStorage[user_id]['status'] = 'Доставляется'
+                    if order.is_waiting:
+                        sessionStorage[user_id]['status'] = 'Ожидает отгрузки'
+                    if order.is_done:
+                        sessionStorage[user_id]['status'] = 'Завершен'
+                    if order.is_not_adopted:
+                        sessionStorage[user_id]['status'] = 'Пока не принят'
+                    sessionStorage[user_id]['last_question'] = 228 # заказ есть
+                    return    
+                else:
+                    vk.message.send(user_id=user_id,
+                                message=f"Ваш заказ {sessionStorage[user_id]['status']}",
+                                random_id=rndm)
 
             if quests == 228:
                 vk.message.send(user_id=user_id,
