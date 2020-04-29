@@ -53,7 +53,7 @@ def handle_dialog(event, vk):
                     sessionStorage[user_id]['activity'] = message
                     sessionStorage[user_id]['last_question'] = 3  # авторизация завершена
                     vk.messages.send(user_id=user_id,
-                                     message='Вы успешно авторизованы как почтальон! Теперь Вам нужно указать вашу почту',
+                                     message='Теперь Вам нужно указать вашу почту',
                                      random_id=rndm)
                     break
                 elif message == 'Заказчик' or 'заказчик':
@@ -61,7 +61,7 @@ def handle_dialog(event, vk):
                     sessionStorage[user_id]['activity'] = message
                     sessionStorage[user_id]['last_question'] = 3  # авторизация завершена
                     vk.messages.send(user_id=user_id,
-                                     message='Вы успешно авторизованы как заказчик! Теперь Вам нужно указать вашу почту',
+                                     message='Теперь Вам нужно указать вашу почту',
                                      random_id=rndm)
                     break
                 else:
@@ -71,25 +71,12 @@ def handle_dialog(event, vk):
                     continue
             return
         if quests == 3:
-            sessionStorage[user_id]['mail'] = None
-            mail = message.split()
-            counter = 0
-            for i in mail:
-                if i == '@':
-                    counter += 1
-            while sessionStorage[user_id]['mail'] == None:
-                if counter == 1:
-                    vk.messages.send(user_id=user_id,
+            vk.messages.send(user_id=user_id,
                                      message="Теперь придумайте пароль",
                                      random_id=rndm)
                     sessionStorage[user_id]['mail'] = message
                     sessionStorage[user_id]['last_question'] = 4  # Запрос эл. почты
                     return
-                else:
-                    vk.messages.send(user_id=user_id,
-                                     message="Почта не действительна",
-                                     random_id=rndm)
-                    continue
         if quests == 4:
             sessionStorage[user_id]['password'] = message
             sessionStorage[user_id]['last_question'] = 5  # Создание пароля
