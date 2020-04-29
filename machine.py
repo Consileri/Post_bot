@@ -10,10 +10,11 @@ dilivered_flag = False
 status = ''
 order_id = ''
 sessionStorage = {}
-session = db_session.create_session()
 
 
 def main():
+    db_session.global_init("db/blogs.sqlite")
+    session = db_session.create_session()
     vk_session = vk_api.VkApi(
         token="68b38a0e0b7e909d8535d5508795ae46d9c6175ffd694c28428dd3e63a0738d737667112f465e297887c8")
     vk = vk_session.get_api()
